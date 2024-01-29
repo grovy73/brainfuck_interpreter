@@ -22,6 +22,7 @@ class MemoryBlock:
         self.size = size
         self.memory = [0]*self.size
         self.mem_pointer = 0
+        self.loop_start = 0
 
     def mov_right(self):
         self.mem_pointer += 1
@@ -39,30 +40,40 @@ class MemoryBlock:
     def decrement(self):
         self.memory[self.mem_pointer] -= 1
 
-    def loop(self):
-        # TODO!
-        if self.memory[self.mem_pointer] <= 0:
-            pass
-        else:
-            pass
+    def start_loop(self, pc):
+        self.loop_start = pc
     
+    def reset_loop(self, pc):
+        if self.memory[self.mem_pointer] == 0:
+            return pc
+        else:
+            return self.loop_start
+
     def print_ascii(self):
         print(chr(self.memory[self.mem_pointer]))
 
 memblock = MemoryBlock(24)
 
+pc = 0
 for line in lines:
     if line == '':
         continue
-
-    for command in line:
-        if command == '>':
+    
+    pc = 0
+    while(pc < len(line)):
+        if line[pc] == '>':
             memblock.mov_right()
-        elif command == '<':
+        elif line[pc] == '<':
             memblock.mov_left()
-        elif command == '+':
+        elif line[pc] == '+':
             memblock.increment()
-        elif command == '-':
+        elif line[pc] == '-':
             memblock.decrement()
-        elif command == '.':
+        elif line[pc] == '.':
             memblock.print_ascii()
+        elif line[pc] == '[':
+            memblock.start_loop(pc)
+        elif line[pc] == ']':
+            pc = memblock.reset_loop(pc)
+            
+        pc += 1
