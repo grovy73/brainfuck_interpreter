@@ -52,28 +52,28 @@ class MemoryBlock:
     def print_ascii(self):
         print(chr(self.memory[self.mem_pointer]))
 
-memblock = MemoryBlock(24)
+memblock = MemoryBlock(256)
 
 pc = 0
+program = ""
 for line in lines:
-    if line == '':
-        continue
-    
-    pc = 0
-    while(pc < len(line)):
-        if line[pc] == '>':
-            memblock.mov_right()
-        elif line[pc] == '<':
-            memblock.mov_left()
-        elif line[pc] == '+':
-            memblock.increment()
-        elif line[pc] == '-':
-            memblock.decrement()
-        elif line[pc] == '.':
-            memblock.print_ascii()
-        elif line[pc] == '[':
-            memblock.start_loop(pc)
-        elif line[pc] == ']':
-            pc = memblock.reset_loop(pc)
-            
-        pc += 1
+    program += line
+
+
+while(pc < len(program)):
+    if program[pc] == '>':
+        memblock.mov_right()
+    elif program[pc] == '<':
+        memblock.mov_left()
+    elif program[pc] == '+':
+        memblock.increment()
+    elif program[pc] == '-':
+        memblock.decrement()
+    elif program[pc] == '.':
+        memblock.print_ascii()
+    elif program[pc] == '[':
+        memblock.start_loop(pc)
+    elif program[pc] == ']':
+        pc = memblock.reset_loop(pc)
+        
+    pc += 1
